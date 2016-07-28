@@ -1,0 +1,142 @@
+<!--
+****************************************************************
+pokedex.html
+****************************************************************
+
+Here's a program called pokedex using jQuery 2.1.3
+Fun little project for you to review to show you the power of jQuery and the .ajax (jQuery) funtionality
+Let's use jQuery to pull some content from the pokemon API.
+****************************************************************
+
+Written by: Daniel H. Oostra
+For: DC Coding Dojo Cohort - "The BETAS"
+JULY 28, 2016 - Tyson's Corner, VA
+doostra@codingdojo.com
+skype:daniel.oostra
+****************************************************************
+*
+Coding Dojo DC Campus
+1775 Greensboro Station Place
+Suite 210/220
+McLean, VA 22102
+****************************************************************
+
+-->
+
+<!DOCTYPE html>
+<html>
+   <head>
+       <meta charset="utf-8">
+       <title>pokedex-for dc web fun chaps</title>
+       <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+       <style>
+           #button{
+               background-color: white;
+               border: none;
+           }
+           #rightside{
+               background-color: white;
+               border: 5px solid red;
+               border-style: double;
+               display: inline-block;
+               height: 80%;
+               overflow: scroll;
+               padding: 10px;
+               position: fixed;
+               right: 7%;
+               top: 2.54353%;
+               width:12%;
+           }
+           #pokemon{
+               display: inline-block;
+               width: 50%;
+               background-color: grey;
+               height: 150px;
+               margin: 50px 50px 20px 50px;
+               padding: 10px;
+               border: 2px solid black;
+           }
+
+           #pokedex {
+           height: 300px;
+           width: 250px;
+           background-color: red;
+           border-radius: 10px;
+           }
+
+           button {
+               margin-bottom: 25px;
+               margin-left: 65px;
+           }
+       </style>
+
+       <script>
+           function clicked_button(clicked_id)
+           {
+               // alert(clicked_id - 1);
+               clicked_id--;
+               // create a storage container for the html.
+               var html_str='';
+               // another variable for the image icon/avatar
+               var image_url = 'http://pokeapi.co/media/img/'+ clicked_id +'.png/'
+               //let's use jQuery to pull some information and put it in our html container
+               $.get('http://pokeapi.co/api/v1/pokemon/'+ clicked_id +'/', function(res) {
+                   var html_str ='';
+                   html_str += '<div><h2>'+res.name+'</h2></div>';
+                   html_str += '<div id="poke_image"><img src="'+ image_url +'"/>';
+                   html_str += '<h4>Types</h4><ul>';
+                   for(var i = 0; i < res.types.length; i++) {
+                       html_str += "<li>" + res.types[i].name + "</li>";
+                   }
+                   html_str += "</ul>";
+                   html_str += "<h4>Height</h4><ul><li>" + res.height + "</li></ul>";
+                   html_str += "<h4>Weight</h4><ul><li>" + res.weight + "</li></ul>";
+                   
+                   $('#poke_info').html(html_str);
+                   //you know what, give it to me JSON!!!!
+               }, "json");
+       }
+       </script>
+       <script>
+       //upon page load... run it
+            $(document).ready(function(){
+               var html_str = '';
+               var pm_ID = 2;
+               //let's goto the API and get all the critters. when i click on one of them,
+                   var url = 'http://pokeapi.co/api/v1/sprite/'+ pm_ID +'/';
+                   $.get(url, function(res) {
+                       html_str += '<input onClick="clicked_button(this.id)" style="display:inline-block" type="image" src="http://pokeapi.co' + res.image + '/" id="'+res.id+'" />';
+                       $('#icon').html(html_str);}, 'json');
+                   $('button').click(function() { 
+                       pm_ID++;    
+                       ('#input').hide(); 
+                   })
+           })
+           // $(document).ready(function(){
+           //     var html_str = '';
+           //     var pm_ID = 0;
+           //     //let's goto the API and get all the critters. when i click on one of them,
+           //     for (pm_ID = 1; pm_ID <= 152; pm_ID++) {
+           //         var url = 'http://pokeapi.co/api/v1/sprite/'+ pm_ID +'/';
+           //         $.get(url, function(res) {
+           //             html_str += '<input onClick="clicked_button(this.id)" style="display:inline-block" type="image" src="http://pokeapi.co' + res.image + '/" id="'+res.id+'" />';
+           //             $('#icon').html(html_str);}, 'json');
+           //     }
+           // })
+       </script>
+   </head>
+
+   <body>
+       <div id="rightside">
+           <div id="poke_pic"></div>
+           <div id="poke_info"></div>
+       </div>
+       <div id="pokedex">
+           <div id="pokemon">
+           <div id="icon"></div>
+           </div>
+           <button> Next Pokemon! </button>
+       </div>
+
+   </body>
+</html>
